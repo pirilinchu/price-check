@@ -1,10 +1,9 @@
 .main {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  padding: 6rem;
-  min-height: 100vh;
+  display: flex; /* Use flexbox to align children */
+  justify-content: center; /* Center children horizontally */
+  align-items: center; /* Center children vertically */
+  min-height: 100vh; /* Make the main container at least as tall as the viewport */
+  flex-direction: column; /* Stack children vertically */
 }
 
 .description {
@@ -40,11 +39,15 @@
 }
 
 .grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(25%, auto));
+  display: flex;
+  gap: 20px;
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Center items vertically if you have multiple lines of items */
+  flex-wrap: wrap; /* Allow items to wrap */
   max-width: 100%;
-  width: var(--max-width);
+  margin: 0 auto; /* Center the .grid container itself */
 }
+
 
 .card {
   padding: 1rem 1.2rem;

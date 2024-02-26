@@ -1,92 +1,74 @@
-import Image from "next/image";
+"use client";
+
 import styles from "./page.module.css";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const [buyPrice, setBuyPrice] = useState("Loading...");
+  const [sellPrice, setSellPrice] = useState("Loading...");
+
+  useEffect(() => {
+    const fetchData = async (tradeType) => {
+      const response = await fetch(
+        "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fiat: "BOB",
+            page: 1,
+            rows: 1,
+            tradeType: tradeType,
+            asset: "USDT",
+            countries: [],
+            proMerchantAds: false,
+            shieldMerchantAds: false,
+            publisherType: null,
+            payTypes: [],
+            classifies: ["mass", "profession"],
+          }),
+        }
+      );
+      const data = await response.json();
+      return data.data[0].adv.price;
+    };
+
+    fetchData("BUY").then((price) => setBuyPrice(price));
+    fetchData("SELL").then((price) => setSellPrice(price));
+  }, []);
+
   return (
     <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
       <div className={styles.grid}>
         <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
+          href="https://p2p.binance.com/en/trade/all-payments/USDT?fiat=BOB"
           className={styles.card}
           target="_blank"
           rel="noopener noreferrer"
         >
           <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
+            Buy <span>-&gt;</span>
           </h2>
           <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
+            <strong>{buyPrice}</strong>{" "}
+            <span style={{ fontSize: "smaller" }}>BOB</span>
+          </p>
+        </a>
+
+        <a
+          href="https://p2p.binance.com/en/trade/sell/USDT?fiat=BOB&payment=all-payments"
+          className={styles.card}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>
+            Sell <span>-&gt;</span>
+          </h2>
+          <p>
+            <strong>{sellPrice}</strong>{" "}
+            <span style={{ fontSize: "smaller" }}>BOB</span>
           </p>
         </a>
       </div>
